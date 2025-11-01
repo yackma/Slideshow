@@ -10,12 +10,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,15 +55,16 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun SlideshowImage(modifier: Modifier = Modifier) {
-        var result by remember { mutableStateOf(1) }
-        val imageResource = when (result) {
-            1 -> R.drawable.fall
-            2 -> R.drawable.winter
-            3 -> R.drawable.spring
-            4 -> R.drawable.rain
-            else -> R.drawable.summer
+    var slideNumber by remember { mutableStateOf("") }
+    var result by remember { mutableStateOf(1) }
+    val imageResource = when (result) {
+        1 -> R.drawable.fall
+        2 -> R.drawable.winter
+        3 -> R.drawable.spring
+        4 -> R.drawable.rain
+        else -> R.drawable.summer
 
-        }
+    }
     Column (
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -67,52 +74,87 @@ fun SlideshowImage(modifier: Modifier = Modifier) {
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
-            )
+        )
     }
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
-        ) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Bottom
+    ) {
 
-            Button(
-                onClick ={
+        Button(
+            onClick ={
                 result =
                     if(result == 1) 5
                     else result - 1
-                },
-                modifier = Modifier
-                    .height(120.dp)
-                    .padding(25.dp)
-            ) {
-                Text(
-                    stringResource(R.string.back),
-                    fontSize = 20.sp,
-                )
-            }
+            },
+            modifier = Modifier
+                .height(120.dp)
+                .padding(25.dp)
+        ) {
+            Text(
+                stringResource(R.string.back),
+                fontSize = 20.sp,
+            )
+        }
+        TextField(
+            value = slideNumber,
+            onValueChange = {slideNumber = it
+                val number = it.toIntOrNull()
+                if (number != null && number in 1..5) {
+                    result = number
+                }
+            },
+            label = { Text(stringResource(R.string.pagenum)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .width(95.dp)
+                .padding(horizontal = 1.dp)
 
+        )
 
-            Button(
-                onClick= {
+        Button(
+            onClick= {
                 result=
                     if (result == 5) 1
                     else result + 1
             },
-                modifier = Modifier
-                    .height(120.dp)
-                    .padding(25.dp)
-            ) {
-                Text(
-                    stringResource(R.string.next),
-                    fontSize = 20.sp
-                )
-            }
+            modifier = Modifier
+                .height(120.dp)
+                .padding(25.dp)
+        ) {
+            Text(
+                stringResource(R.string.next),
+                fontSize = 20.sp
+            )
         }
+    }
 }
+
+@Composable
+fun EditNumberField(
+    keyboardOptions: KeyboardOptions,
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier= Modifier
+){
+
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier= modifier,
+        label = { Text(stringResource(R.string.pagenum))},
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+
+    )
+}
+
 @Preview
-        @Composable
-        fun SlideShowApp(){
-            SlideshowImage(modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center))
-        }
+@Composable
+fun SlideShowApp(){
+    SlideshowImage(modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center))
+}
