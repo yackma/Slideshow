@@ -27,11 +27,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,12 +65,28 @@ fun SlideshowImage(modifier: Modifier = Modifier) {
         3 -> R.drawable.spring
         4 -> R.drawable.rain
         else -> R.drawable.summer
-
+    }
+    val seasonTitle= when (result){
+        1 -> "Fall"
+        2 -> "Winter"
+        3 -> "Spring"
+        4 -> "Rain"
+        else -> "Summer"
     }
     Column (
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = seasonTitle,
+            fontSize = 65.sp,
+            lineHeight = 100.sp,
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
         Image(
             painter = painterResource(imageResource),
             contentDescription = null,
